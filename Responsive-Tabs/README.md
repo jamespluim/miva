@@ -17,7 +17,7 @@ Responsive Tabs
   
 
 4) Below is some example HTML markup
-
+```
 <!-- Tabbed Content -->
 <div id="tabs">
 	<ul>
@@ -51,3 +51,4 @@ Responsive Tabs
 	</div>
 
 </div>
+```
