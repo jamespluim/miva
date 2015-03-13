@@ -7,14 +7,14 @@ Responsive Tabs
 2) Include jquery.responsiveTabs.min.js
 
 3) Add the following JS to scripts.js
-
+```javascript
 // ---- Responsive Tabs Tabbed Content ---- //
 	$('#tabs').responsiveTabs({
     active: 0,
     animation: 'slide',
     rotate: false
   });
-  
+```
 
 4) Below is some example HTML markup
 ```
