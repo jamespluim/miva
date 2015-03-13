@@ -3,7 +3,7 @@ miva
 
 Responsive Tabs
 
-1) Include responsive-tabs.css
+1) Include responsive-tabs.css<br />
 2) Include jquery.responsiveTabs.min.js
 
 3) Add the following JS to scripts.js
