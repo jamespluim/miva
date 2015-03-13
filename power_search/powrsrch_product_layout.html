@@ -1,0 +1,128 @@
+<div class="row">
+    <div id="js-product-list" class="row">
+        <mvt:foreach iterator="product" array="search_results:products">
+        <div class="column half medium-one-third category-product">
+
+			<a href="&mvt:global:sessionurl;Screen=PROD&Product_Code=&mvta:product:code;&Store_Code=&mvta:store:code;&search=&mvta:global:search;&searchoffset=&mvta:global:searchoffset;&filter_cat=&mvta:global:filter_cat;&PowerSearch_Begin_Only=&mvta:global:PowerSearch_Begin_Only;&sort=&mvta:global:sort;&range_low=&mvta:global:range_low;&range_high=&mvta:global:range_high;&mvt:powersearch:field_url;" title="&mvte:product:name;">
+				<span class="flag &mvt:product:flag;">
+					<mvt:item name="toolkit" param="customimagec|prodimg|l.all_settings:product:code|main|255|333|1" />
+					<span class="image-container">
+						<span class="valign-middle"></span>
+						<mvt:if expr="g.prodimg">
+							<img src="&mvt:global:prodimg;" alt="&mvte:product:name;" title="&mvte:product:name;" />
+						<mvt:elseif expr="NOT ISNULL l.settings:product:imagetypes:main">
+							<img src="&mvte:product:imagetypes:main;" alt="&mvte:product:name;" title="&mvte:product:name;" />
+						<mvt:else>
+							<img src="../images/img_no_thumb.jpg" alt="&mvte:product:name;" title="&mvte:product:name;" />
+						</mvt:if>
+						<mvt:if expr="l.settings:seo_settings:sl_active">
+							<span class="button button-square bg-blue white uppercase quick-view" data-product-link="&mvte:product:link;?show=quickview">Quick View</span>
+						<mvt:else>
+							<span class="button button-square bg-blue white uppercase quick-view" data-product-link="&mvte:product:link;&show=quickview">Quick View</span>
+						</mvt:if>
+					</span>
+				</span>
+				<span class="breaker"></span>
+				<p>&mvte:product:name;</p>
+				<mvt:if expr="l.settings:product:base_price GT l.settings:product:price">
+					<p><strong class="strike">&mvt:product:formatted_base_price;</strong><strong class="red">&mvt:product:formatted_price;</strong></p>
+				<mvt:else>
+					<p><strong>&mvt:product:formatted_price;</strong></p>
+				</mvt:if>
+			</a>
+            
+            <mvt:comment>
+            <mvt:if expr="l.settings:product:inv_level NE 'out'">
+                <div class="purchase-buttons">
+                    <form method="post" action="&mvte:global:sessionurl;Screen=BASK">
+                        <input type="hidden" name="Old_Screen" value="&mvte:global:Screen;" />
+                        <input type="hidden" name="Old_Search" value="&mvte:global:Search;" />
+                        <input type="hidden" name="Action" value="ADPR" />
+                        <input type="hidden" name="Quantity" value="1" />
+                        <input type="hidden" name="Attributes" value="Yes" />
+                        <input type="hidden" name="Store_Code" value="&mvte:store:code;" />
+                        <input type="hidden" name="Product_Code" value="&mvte:product:code;" />
+                        <input type="hidden" name="Current_Product_Code" value="&mvte:global:Product_Code;" />
+                        <input type="hidden" name="Category_Code" value="&mvte:global:Category_Code;" />
+                        <input type="hidden" name="Offset" value="&mvte:global:SearchOffset;" />
+                        <input type="hidden" name="AllOffset" value="&mvte:global:AllOffset;" />
+                        <input type="hidden" name="CatListingOffset" value="&mvte:global:CatListingOffset;" />
+                        <input type="hidden" name="RelatedOffset" value="&mvte:global:RelatedOffset;" />
+                        <input type="hidden" name="SearchOffset" value="&mvte:global:SearchOffset;" />
+                        <mvt:item name="buttons" param="AddToBasketE" />
+                    </form>
+                </div>
+            </mvt:if>
+            </mvt:comment>
+
+        </div>
+        </mvt:foreach>
+    </div>
+
+    <div class="clear"></div>
+
+    <mvt:if expr="g.SearchOffset OR g.SearchNextOffset">
+    <div class="column whole">
+        <div class="next-previous">
+            <div class="column half">
+                <mvt:if expr="g.SearchOffset GT 0">
+                <div class="previous-button align-left">
+                    <form method="post" action="&mvt:global:sessionurl;">
+                    <input type="hidden" name="Screen" value="&mvte:global:Screen;" />
+                    <input type="hidden" name="Store_Code" value="&mvte:global:Store_Code;" />
+                    <input type="hidden" name="Category_Code" value="&mvte:global:Category_Code;" />
+                    <input type="hidden" name="Product_Code" value="&mvte:global:Product_Code;" />
+                    <input type="hidden" name="Search" value="&mvte:global:Search;" />
+                    <input type="hidden" name="Offset" value="&mvte:global:SearchPrevOffset;" />
+                    <input type="hidden" name="CatListingOffset" value="&mvte:global:CatListingOffset;" />
+                    <input type="hidden" name="AllOffset" value="&mvte:global:AllOffset;" />
+                    <input type="hidden" name="RelatedOffset" value="&mvte:global:RelatedOffset;" />
+                    <input type="hidden" name="SearchOffset" value="&mvte:global:SearchPrevOffset;" />
+                    <!-- begin additional inputs //-->
+                    <input type="hidden" name="filter_cat" value="&mvte:global:filter_cat;">
+                    <input type="hidden" name="PowerSearch_Begin_Only" value="&mvte:global:PowerSearch_Begin_Only;">
+                    <input type="hidden" name="sort" value="&mvte:global:sort;">
+                    <input type="hidden" name="range_low" value="&mvte:global:range_low;">
+                    <input type="hidden" name="range_high" value="&mvte:global:range_high;">
+                    <mvt:foreach iterator="fields" array="powersearch_fields">
+                    <input type="hidden" name="&mvte:fields;" value="1">
+                    </mvt:foreach>
+                    <!-- end additional inputs //-->
+                    <mvt:item name="buttons" param="Previous" />
+                    </form>
+                </div>
+                </mvt:if>
+            </div>
+            <div class="column half">
+                <mvt:if expr="g.SearchNextOffset GT 0">
+                <div class="next-button align-right">
+                    <form method="post" action="&mvt:global:sessionurl;">
+                    <input type="hidden" name="Screen" value="&mvte:global:Screen;" />
+                    <input type="hidden" name="Store_Code" value="&mvte:global:Store_Code;" />
+                    <input type="hidden" name="Category_Code" value="&mvte:global:Category_Code;" />
+                    <input type="hidden" name="Product_Code" value="&mvte:global:Product_Code;" />
+                    <input type="hidden" name="Search" value="&mvte:global:Search;" />
+                    <input type="hidden" name="Offset" value="&mvte:global:SearchNextOffset;" />
+                    <input type="hidden" name="CatListingOffset" value="&mvte:global:CatListingOffset;" />
+                    <input type="hidden" name="AllOffset" value="&mvte:global:AllOffset;" />
+                    <input type="hidden" name="RelatedOffset" value="&mvte:global:RelatedOffset;" />
+                    <input type="hidden" name="SearchOffset" value="&mvte:global:SearchNextOffset;" />
+                    <!-- begin additional inputs //-->
+                    <input type="hidden" name="filter_cat" value="&mvte:global:filter_cat;">
+                    <input type="hidden" name="PowerSearch_Begin_Only" value="&mvte:global:PowerSearch_Begin_Only;">
+                    <input type="hidden" name="sort" value="&mvte:global:sort;">
+                    <input type="hidden" name="range_low" value="&mvte:global:range_low;">
+                    <input type="hidden" name="range_high" value="&mvte:global:range_high;">
+                    <mvt:foreach iterator="fields" array="powersearch_fields">
+                    <input type="hidden" name="&mvte:fields;" value="1">
+                    </mvt:foreach>
+                    <!-- end additional inputs //-->
+                    <mvt:item name="buttons" param="Next" />
+                    </form>
+                </div>
+                </mvt:if>
+            </div>
+        </div>
+    </div>
+    </mvt:if>
+</div>

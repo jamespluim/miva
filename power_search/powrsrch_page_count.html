@@ -1,0 +1,43 @@
+<div id="searchcount" class="align-right">
+	<div class="column whole align-right">
+		<div class="pagecount">
+			<mvt:if expr="l.settings:cxp_total_pages GT 0">
+				Page &mvt:cxp_current_page; of &mvt:cxp_total_pages;
+				<br>
+			</mvt:if>
+			<mvt:if expr="l.settings:cxp_total_pages GT 1">
+				<mvt:foreach iterator="pages" array="cxp_offset">
+					<mvt:if expr="l.settings:pages:buffer GE 5 AND l.settings:pages:number NE 1 AND l.settings:pages:number NE l.settings:cxp_total_pages">
+	 					<mvt:if expr="l.settings:pages:buffer EQ 5">
+							<a href="&mvt:global:sessionurl;Screen=SRCH&Store_Code=&mvta:store:code;&search=&mvta:global:search;&searchoffset=&mvt:pages:offset;&filter_cat=&mvta:global:filter_cat;&PowerSearch_Begin_Only=&mvta:global:PowerSearch_Begin_Only;&sort=&mvta:global:sort;&range_low=&mvta:global:range_low;&range_high=&mvta:global:range_high;&mvt:powersearch:field_url;">
+							<mvt:if expr="l.settings:pages:number GT l.settings:cxp_current_page">
+	 							<img src="graphics/right.gif" border="0"></a>
+							<mvt:else>
+	 							<img src="graphics/left.gif" border="0"></a>
+							</mvt:if>
+	 					</mvt:if>
+					<mvt:else>
+						<mvt:if expr="l.settings:cxp_current_page EQ pos1">
+							&mvt:pages:number;
+						<mvt:else>
+							<a href="&mvt:global:sessionurl;Screen=SRCH&Store_Code=&mvta:store:code;&search=&mvta:global:search;&searchoffset=&mvt:pages:offset;&filter_cat=&mvta:global:filter_cat;&PowerSearch_Begin_Only=&mvta:global:PowerSearch_Begin_Only;&sort=&mvta:global:sort;&range_low=&mvta:global:range_low;&range_high=&mvta:global:range_high;&mvt:powersearch:field_url;">
+							&mvt:pages:number;</a>
+						</mvt:if>
+					</mvt:if>
+				</mvt:foreach>
+				<br>
+			</mvt:if>
+		</div>
+		<div class="prodfound">
+			<mvt:if expr="l.settings:search_product_count EQ 1">
+				1 product found
+			<mvt:else>
+				&mvte:search_product_count; products found
+			</mvt:if>
+		</div>
+		<mvt:if expr="g.current_category">
+			<div class="currentcat"><h2>&mvte:global:current_category;</h2></div>
+		</mvt:if>
+		<div style="clear:both"></div>
+	</div>
+</div>

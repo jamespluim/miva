@@ -1,0 +1,93 @@
+<mvt:item name="html_profile" />
+<head>
+<title>&mvt:store:name;: &mvt:page:name;</title>
+<mvt:item name="head" param="head_tag" />
+<style type="text/css">
+	<!--
+	#pswrap { padding-top:20px;}
+	#pwrsrchbox {width:70%; font-size:14px; padding-bottom: 10px;}
+	.pwrsrchleftbox {float:left; width:30%; padding:2px 20px 10px 2px; text-align:left;}
+	.pwrsrchrightbox {float:left; width:50%; padding:2px 20px 10px 2px; text-align:left;}
+	.pwrsrchalphalist { padding:20px; text-align:center; font-size:14px;}
+	#psbox { width:30%; float:right; font-size:14px; padding-bottom: 10px;}
+	#searchcount { font-size:14px; }
+	.prodfound {float:right; width:160px; height: 20px; padding:2px 20px 2px 2px;}
+	.pagecount {float:right; /*width:160px;*/ padding:2px 20px 2px 2px;}
+	.currentcat {float:right; padding:2px 20px 2px 2px;}
+	input[name="range_low"],
+	input[name="range_high"] {
+	    display: inline-block;
+	    width: 20%;
+	}
+	input[name="Search"] {
+	    display: inline-block;
+	    width: 50%;
+	}
+	input.button[type="submit"] {
+	    background-color: #0A2D3F;
+	    display: inline-block;
+	}
+	select { font-size:14px;}
+	-->
+</style>
+</head>
+<mvt:item name="body">
+	<mvt:item name="hdft" param="global_header" />	
+	<div class="row hdft-header">
+		<mvt:item name="hdft" param="header" />
+	</div>
+	<mvt:if expr="NOT ISNULL g.Search">
+		<mvt:if expr="l.settings:search_product_count EQ 0">
+			<div class="row">
+				<div class="column whole">
+					<p class="italic">No products matched your search criteria</p>
+					<form method="post" action="&mvt:global:sessionurl;Screen=SRCH" class="whole medium-half">	
+						<input type="hidden" name="Store_Code" value="&mvte:store:code;" />
+						<div class="form-row">
+							<label for="l-Search" class="bold">Search For:</label>
+							<input type="search" name="Search" value="&mvte:global:Search;" id="l-Search" />
+						</div>
+						<div class="form-row align-right">
+							<mvt:item name="buttons" param="Search" />
+							<mvt:item name="powrsrch" param="fields" /> 
+						</div>
+					</form>
+					<br class="clear" />
+				</div>
+			</div>
+		<mvt:else>
+			<mvt:comment><mvt:item name="search_results" /></mvt:comment>
+			<form method="post" action="&mvt:global:sessionurl;Screen=SRCH" class="whole medium-half"> 
+                <input type="hidden" name="Store_Code" value="&mvte:store:code;" />
+                <div class="form-row">
+                    <label for="l-Search" class="bold">Search For:</label>
+                    <input type="search" name="Search" value="&mvte:global:Search;" id="l-Search" />
+                    <mvt:item name="buttons" param="Search" />
+                </div>
+            </form>
+			<mvt:item name="powrsrch" param="fields" />
+			<mvt:item name="powrsrch" param="pgcount" />
+			<mvt:item name="powrsrch" param="prod" />
+			<mvt:item name="powrsrch" param="pgcount" /> 
+		</mvt:if>
+	<mvt:else>
+		<div class="row">
+			<form method="post" action="&mvt:global:sessionurl;Screen=SRCH" class="whole medium-half">	
+				<input type="hidden" name="Store_Code" value="&mvte:store:code;" />
+				<div class="form-row">
+					<label for="l-Search" class="bold">Search For:</label>
+					<input type="search" name="Search" value="&mvte:global:Search;" id="l-Search" />
+				</div>
+				<div class="form-row align-right">
+					<mvt:item name="buttons" param="Search" />
+				</div>
+			</form>
+			<br class="clear" />
+		</div>
+	</mvt:if>
+	<div class="row hdft-footer">
+		<mvt:item name="hdft" param="footer" />
+	</div>
+	<mvt:item name="hdft" param="global_footer" />	
+</mvt:item>
+</html>
