@@ -1,0 +1,203 @@
+<mvt:if expr="s.remote_addr NE '207.114.171.26' AND s.remote_addr NE '72.198.208.100' AND s.remote_addr NE '204.15.121.110'">
+Current IP Address: <mvt:eval expr="s.remote_addr" /> <br/>
+Access Denied
+<mvt:exit />
+</mvt:if>
+
+<mvt:comment>
+| Amazon Product Feed
+| gm Products
+| File Output: /amazon_feed.txt
+|
+</mvt:comment>
+ 
+<mvt:assign name="g.tab" value="asciichar(9)" />
+<mvt:assign name="g.newline" value="asciichar(10)" />
+<mvt:assign name="g.pipe" value="asciichar(124)" />
+<mvt:assign name="g.comma" value="asciichar(44)" />
+<mvt:assign name="g.quote" value="asciichar(34)" />
+<mvt:assign name="g.period" value="asciichar(46)" />
+<mvt:assign name="g.delimiter" value="asciichar(9)" />
+ 
+<mvt:assign name="g.filename" value="'amazon_feed.txt'" />
+<mvt:assign name="g.filepath" value="'/'" />
+<mvt:assign name="g.headerrow" value="'SKU' $ g.delimiter $
+'UPC' $ g.delimiter $
+'Title' $ g.delimiter $
+'Clothing-Type' $ g.delimiter $
+'Gender' $ g.delimiter $
+'Adult/Youth' $ g.delimiter $
+'Description' $ g.delimiter $
+'Product Feature 1 (Bullet Points)' $ g.delimiter $
+'Main Image URL 1' $ g.delimiter $
+'Brand' $ g.delimiter $
+'Size' $ g.delimiter $
+'Color' $ g.delimiter $
+'Quantity' $ g.delimiter $
+'Price' $ g.delimiter $
+'Search Terms' $ g.newline" />
+
+<mvt:comment>
+Delete File if it exists, create new file with header row
+</mvt:comment>
+<mvt:assign name="g.file_exists" value="sexists(g.filepath $ g.filename)" />
+<mvt:if expr="g.file_exists EQ 1">
+<mvt:assign name="g.file_deleted" value="sdelete(g.filepath $ g.filename)" />
+<mvt:if expr="g.file_deleted EQ 1">
+<mvt:assign name="g.file_created" value="file_create(g.filepath $ g.filename,'script', g.headerrow)" />
+</mvt:if>
+<mvt:else>
+<mvt:assign name="g.file_created" value="file_create(g.filepath $ g.filename,'script', g.headerrow)" />
+</mvt:if>
+ 
+ 
+<mvt:comment>Add 30 days to current day</mvt:comment>
+<mvt:assign name = "g.expiration_date" value = "s.time_t + 2592000" />
+<mvt:assign name = "l.settings:month" value = "padl( time_t_month( g.expiration_date, 'local' ), 2, '0' )" />
+<mvt:assign name = "l.settings:day" value = "padl( time_t_dayofmonth( g.expiration_date, 'local' ), 2, '0' )" />
+<mvt:assign name = "l.settings:year" value = "time_t_year( g.expiration_date, 'local' )" />
+<mvt:assign name = "g.formatted_expiration" value = "l.settings:year $ '-' $ l.settings:month $ '-' $ l.settings:day" />
+ 
+<mvt:assign name="g.count" value="0" />
+<mvt:foreach iterator="product" array="all_products:products">
+<mvt:if expr="l.settings:product:code NE 'GIFT'">
+<mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'googlecategory', g.product_type)" />
+<mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'brand', g.brand)" />
+<mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'mpn', g.mpn)" />
+<mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'pagefinder', g.seourl)" />
+
+
+    <mvt:item name="toolkit" param="variantarray|vcount|l.all_settings:product:code" />
+    <mvt:if expr="g.vcount GT 0">
+
+        <mvt:foreach iterator="variant" array="variants">
+            <mvt:if expr="l.settings:variant:count_onhand GT 0">
+            <mvt:foreach iterator="option" array="variant:variant_options">
+                <mvt:if expr="l.settings:option:attr_code EQ 'size'">
+                    <mvt:assign name="g.size" value="l.settings:option:opt_code" />
+                <mvt:elseif expr="l.settings:option:attr_code EQ 'color'">
+                    <mvt:assign name="g.color" value="l.settings:option:opt_code" />
+                </mvt:if>
+            </mvt:foreach>
+            <mvt:if expr="g.size">
+            <mvt:else>
+                <mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'size', g.size)" />
+            </mvt:if>
+            <mvt:if expr="g.color">
+            <mvt:else>
+                <mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'color', g.color)" />
+            </mvt:if>
+
+            <mvt:item name="customfields" param="Read_Product_Code(l.settings:variant:variant_code,'upc', g.upc)" />
+            <mvt:if expr="g.upc">
+            <mvt:else>
+                <mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'upc', g.upc)" />
+            </mvt:if>
+
+            <mvt:item name="customfields" param="Read_Product_Code(l.settings:variant:variant_code,'srchTerms', g.srchTerms)" />
+            <mvt:if expr="g.srchTerms">
+            <mvt:else>
+                <mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'srchTerms', g.srchTerms)" />
+            </mvt:if>
+
+            <mvt:item name="customfields" param="Read_Product_Code(l.settings:variant:variant_code,'varimage', g.varimage)" />
+            <mvt:if expr="NOT ISNULL g.varimage">
+                <mvt:assign name="l.settings:variantimage" value="'http://' $ g.domain:name $ '/mm5/' $ g.varimage" />
+            <mvt:else>
+                <mvt:assign name="l.settings:variantimage" value="'http://' $ g.domain:name $ '/mm5/' $ l.settings:product:image" />
+            </mvt:if>
+
+            <mvt:comment><mvt:item name="toolkit" param="nohtml|new_desc|l.all_settings:product:descrip" /></mvt:comment>
+            <mvt:item name="toolkit" param="productmeta|CODE|l.all_settings:product:code" />
+            <mvt:item name="toolkit" param="nohtml|new_desc|l.all_settings:meta:description" />
+            <mvt:item name="toolkit" param="mvassign|new_desc|glosub(g.new_desc,asciichar(10), '')"/>
+            <mvt:item name="toolkit" param="mvassign|new_desc|glosub(g.new_desc,asciichar(13), '')"/>
+
+            <mvt:if expr="l.settings:variant:count_onhand GT 0">
+                <mvt:assign name="l.settings:instock" value="'in stock'" />
+            <mvt:else>
+                <mvt:assign name="l.settings:instock" value="'out of stock'" />
+            </mvt:if>
+            <mvt:if expr="g.mpn">
+                <mvt:assign name="l.settings:new_mpn" value="g.mpn" />
+            <mvt:else>
+                <mvt:assign name="l.settings:new_mpn" value="l.settings:product:code" />
+            </mvt:if>
+
+            <mvt:assign name="g.file_row" value="l.settings:product:code $ g.delimiter $
+            g.upc $ g.delimiter $
+            l.settings:product:name $ g.delimiter $
+            g.product_type $ g.delimiter $
+            'Female' $ g.delimiter $
+            'Adult' $ g.delimiter $
+            g.new_desc $ g.delimiter $
+            g.new_desc $ g.delimiter $
+            l.settings:variantimage $ g.delimiter $
+            g.brand $ g.delimiter $
+            g.size $ g.delimiter $
+            g.color $ g.delimiter $
+            l.settings:variant:count_onhand $ g.delimiter $
+            l.settings:product:formatted_price $ g.delimiter $
+            g.srchTerms $ g.newline" />
+             
+            <mvt:assign name="g.write_line" value="file_append( g.filepath $ g.filename, 'script', g.file_row )" />
+            <mvt:assign name="g.count" value="g.count + 1" />
+            </mvt:if>
+        </mvt:foreach>
+
+
+    <mvt:else>
+
+        <mvt:if expr="l.settings:product:inv_short NE 'Out of Stock'">
+
+        <mvt:comment><mvt:item name="toolkit" param="nohtml|new_desc|l.all_settings:product:descrip" /></mvt:comment>
+        <mvt:item name="toolkit" param="productmeta|CODE|l.all_settings:product:code" />
+        <mvt:item name="toolkit" param="nohtml|new_desc|l.all_settings:meta:description" />
+        <mvt:item name="toolkit" param="mvassign|new_desc|glosub(g.new_desc,asciichar(10), '')"/>
+        <mvt:item name="toolkit" param="mvassign|new_desc|glosub(g.new_desc,asciichar(13), '')"/>
+
+        <mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'upc', g.upc)" />
+        <mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'srchTerms', g.srchTerms)" />
+
+        <mvt:if expr="l.settings:variant:count_onhand GT 0">
+            <mvt:assign name="l.settings:instock" value="'in stock'" />
+        <mvt:else>
+            <mvt:assign name="l.settings:instock" value="'out of stock'" />
+        </mvt:if>
+        <mvt:if expr="g.mpn">
+            <mvt:assign name="l.settings:new_mpn" value="g.mpn" />
+        <mvt:else>
+            <mvt:assign name="l.settings:new_mpn" value="l.settings:product:code" />
+        </mvt:if>
+        <mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'size', g.size)" />
+        <mvt:item name="customfields" param="Read_Product_Code(l.settings:product:code,'color', g.color)" />
+
+        <mvt:assign name="g.file_row" value="l.settings:product:code $ g.delimiter $
+            g.upc $ g.delimiter $
+            l.settings:product:name $ g.delimiter $
+            g.product_type $ g.delimiter $
+            'Female' $ g.delimiter $
+            'Adult' $ g.delimiter $
+            g.new_desc $ g.delimiter $
+            g.new_desc $ g.delimiter $
+            l.settings:variantimage $ g.delimiter $
+            g.brand $ g.delimiter $
+            g.size $ g.delimiter $
+            g.color $ g.delimiter $
+            l.settings:product:quantity $ g.delimiter $
+            l.settings:product:formatted_price $ g.delimiter $
+            g.srchTerms $ g.newline" />
+         
+        <mvt:assign name="g.write_line" value="file_append( g.filepath $ g.filename, 'script', g.file_row )" />
+        <mvt:assign name="g.count" value="g.count + 1" />
+
+        </mvt:if>
+
+    </mvt:if>
+</mvt:if>
+</mvt:foreach>
+ 
+There were &mvte:global:count; products exported to this file: <br><br>
+Feed Type: &mvte:global:feed_type;<br><br>
+ 
+<a href="http://&mvte:global:domain:name;&mvte:global:filepath;&mvt:global:filename;" target="_blank">http://&mvte:global:domain:name;&mvte:global:filepath;&mvt:global:filename;</a>
