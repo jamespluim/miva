@@ -1,0 +1,9 @@
+<mvt:assign name="spendMore" value="50 - l.settings:basket:total" />
+<mvt:item name="toolkit" param="currencyformat|formattedSpendMore|spendMore" />
+<div class="column whole align-center">
+	<mvt:if expr="g.spendMore GT 0">
+		<h3 class="spendMore">Spend <span class="prettyRed">&mvt:global:formattedSpendMore;</span> more for FREE SHIPPING</h3>
+	<mvt:else>
+		<h3 class="spendMore">You qualify for FREE SHIPPING</h3>
+	</mvt:if>
+</div>
