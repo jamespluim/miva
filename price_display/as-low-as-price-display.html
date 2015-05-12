@@ -1,0 +1,42 @@
+<mvt:if expr="NOT ISNULL l.settings:volume:table">
+
+    <mvt:assign name="l.settings:asLowAs" value=" " />
+    <mvt:foreach iterator="entry" array="volume:table">
+        <mvt:assign name="l.settings:asLowAs" value="l.settings:entry:formatted_price" />
+    </mvt:foreach>
+    <div id="js-mobile-price-value" class="h3 charcoal nm" data-base-price="&mvt:product:price;">As Low As: &mvt:asLowAs;</div>
+
+    <table border="0" cellspacing="0" cellpadding="2">
+    <tr>
+        <th>Quantity</th>
+        <th>Price</th>
+    </tr>
+
+    <mvt:foreach iterator="entry" array="volume:table">
+        <tr>
+            <td>
+                <mvt:if expr="l.settings:entry:low EQ l.settings:entry:high">
+                    &mvte:entry:low;
+                <mvt:elseif expr="l.settings:entry:high">
+                    &mvte:entry:low;-&mvte:entry:high;
+                <mvt:else>
+                    &mvte:entry:low;+
+                </mvt:if>
+            </td>
+            <td>
+                &mvt:entry:formatted_price;
+            </td>
+        </tr>
+    </mvt:foreach>
+    </table>
+<mvt:else>
+    <mvt:if expr="l.settings:product:price GT 0">
+        <div id="js-mobile-price-value" class="h3 charcoal nm" data-base-price="&mvt:product:price;">&mvt:product:formatted_price;</div>
+    <mvt:else>
+        <div id="js-mobile-price-value" class="all-hidden" data-base-price="&mvt:product:price;"></div>
+    </mvt:if>
+    <mvt:if expr="l.settings:product:base_price GT l.settings:product:price">
+        <p>Normally: <s id="js-additional-price">&mvt:product:formatted_base_price;</s></p>
+    </mvt:if>
+    <div id="js-product-discounts"></div>
+</mvt:if>
